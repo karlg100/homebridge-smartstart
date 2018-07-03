@@ -1,0 +1,23 @@
+{
+  "name": "homebridge-smartstart",
+  "version": "0.0.1",
+  "description": "Smartstart support for Homebridge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karlg100/homebridge-smartstart.git"
+  },
+  "keywords": [
+    "viper",
+    "smartstart"
+  ],
+  "author": "Karlg100",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/karlg100/homebridge-smartstart/issues"
+  },
+  "homepage": "https://github.com/karlg100/homebridge-smartstart#readme"
+}
