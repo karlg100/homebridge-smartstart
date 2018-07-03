@@ -20,11 +20,11 @@ function SmartStart(log, config) {
     .on('set', this._setOn.bind(this));
 }
 
-DelaySwitch.prototype.getServices = function() {
+SmartStart.prototype.getServices = function() {
   return [this._service];
 }
 
-DelaySwitch.prototype._setOn = function(on, callback) {
+SmartStart.prototype._setOn = function(on, callback) {
  this.log("Smart starting " + on);
  if (on) {
     clearTimeout(this.Timer);
