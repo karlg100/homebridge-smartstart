@@ -1,5 +1,5 @@
 
-# "Viper Smartstart" Plugin
+# Smartstart Plugin
 
 ## Example config.json:
 
@@ -17,7 +17,7 @@
 
 ```
 
-## Why do we need this plugin?
+## What does this do?
 
 This plugin enables your SmartStart vehicle to be controlled by HomeKit (and Siri) via homebridge.  Install using the standard homebridge instructions, and add this plugin.
 
