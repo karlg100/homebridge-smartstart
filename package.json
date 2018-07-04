@@ -1,6 +1,6 @@
 {
   "name": "homebridge-smartstart",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Smartstart support for Homebridge",
   "main": "index.js",
   "scripts": {
