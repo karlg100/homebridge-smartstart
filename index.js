@@ -63,18 +63,19 @@ class SmartStart {
   }
 
   setOnCharacteristicHandler (value, callback) {
-    /* this is called when HomeKit wants to update the value of the characteristic as defined in our getServices() function */
 
-    /*
-     * The desired value is available in the `value` argument.
-     * This is just an example so we will just assign the value to a variable which we can retrieve in our get handler
-     */
-    this.isOn = value
+    if (this.isOn == value) {
+      this.log(`vehicle aready in the called state via homebridge  :`+this.name, value)
+    } else {
+      this.log(`starting/stopping `+this.name, value)
+      this.vehicle.remote(this.actionCallback);
+      this.isOn = value
+    }
+
 
     if (!value) {
       clearTimeout(this.timer);
     } else {
-
       this.timer = setTimeout(function() {
         this.log('Time is Up!');
         this.service.getCharacteristic(Characteristic.On).updateValue(false);
@@ -83,32 +84,17 @@ class SmartStart {
 
     }
 
-    /* Log to the console the value whenever this function is called */
-    this.log(`calling setOnCharacteristicHandler`, value)
-
-    this.vehicle.remote(this.actionCallback);
-    /*
-     * The callback function should be called to return the value
-     * The first argument in the function should be null unless and error occured
-     */
     callback(null)
   }
 
   getOnCharacteristicHandler (callback) {
-    /*
-     * this is called when HomeKit wants to retrieve the current state of the characteristic as defined in our getServices() function
-     * it's called each time you open the Home app or when you open control center
-     */
 
-    /* Log to the console the value whenever this function is called */
-    this.log(`calling getOnCharacteristicHandler`, this.isOn)
+    this.log(`updating vehcile status`, this.isOn)
 
     /*
-     * The callback function should be called to return the value
-     * The first argument in the function should be null unless and error occured
-     * The second argument in the function should be the current value of the characteristic
-     * This is just an example so we will return the value from `this.isOn` which is where we stored the value in the set handler
+	if the SmartStart API can be figured out, add timer based updates to poll the vehicles, then return those cached values here
      */
+
     callback(null, this.isOn)
   }
 

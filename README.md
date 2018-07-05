@@ -36,6 +36,9 @@ Locking/unlocking is also not implimented.
 ## How to install
 
  ```sudo npm install -g homebridge-smartstart```
+
+## Protop
+If you have mutliple vehicles, and once they are all working and tested via HomeKit, create a room called Vehicles.  (or cars, or whatever you'd like to call the group)  You can then tell Siri "start vehicles" and it will kick a smartstart action to all of them at the same time.  If you have HomeKit sharing setup, your other family members will be able to also see if the vehicles have been started.
  
 ## Credits
 This plugin was forked from and inspired by homebridge-delay-switch, homebridge-simple-switch-example and the alexa-smartstart and smartstart npm by @dale3h.  Without these last two modules, this homebridge module wouldn't exist.
