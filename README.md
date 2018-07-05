@@ -17,7 +17,7 @@
 
 ```
 
-Or multiple vehicles
+### Or multiple vehicles
  ```
     "accessories": [
         {
