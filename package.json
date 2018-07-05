@@ -1,6 +1,6 @@
 {
   "name": "homebridge-smartstart",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Smartstart support for Homebridge",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "homebridge": ">=0.2.0"
   },
   "dependencies": {
-    "smartstart": "git+https://github.com/karlg100/smartstart.git#1.0.2"
+    "smartstart": "git+https://github.com/karlg100/smartstart.git"
   },
   "bugs": {
     "url": "https://github.com/karlg100/homebridge-smartstart/issues"
