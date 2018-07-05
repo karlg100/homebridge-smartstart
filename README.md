@@ -24,8 +24,8 @@ This plugin enables your SmartStart vehicle to be controlled by HomeKit (and Sir
 * name - give your vehicle a name.  Can be anything you like
 * username - your username you use to login to the app on your phone to control your vehicle
 * password - the password to the same account
-* deviceIndex - if you have one vehicle, us 0.  second vehcile is 1, thrid is 2, and so on.
-* delay - the default is a 15 min runtime.  This will turn the switch to the off position after 15 mins, unless you turn it off manually (and stop the car)
+* deviceIndex - if you have one vehicle, use 0. For second vehcile use 1, third use 2, and so on.
+* delay - the default is a 15 min runtime.  This will turn the switch state to the off position after 15 mins, unless you turn it off manually (and stop the car)
 
 ## This is a as simple as it gets impliemntation
 
@@ -37,8 +37,13 @@ Locking/unlocking is also not implimented.
 
  ```sudo npm install -g homebridge-smartstart```
 
-## Protop
+## Protip
 If you have mutliple vehicles, and once they are all working and tested via HomeKit, create a room called Vehicles.  (or cars, or whatever you'd like to call the group)  You can then tell Siri "start vehicles" and it will kick a smartstart action to all of them at the same time.  If you have HomeKit sharing setup, your other family members will be able to also see if the vehicles have been started.
  
+## Todo
+* implment status syncing with cloud.  Should be done in a way that keeps the 5000 actions/year in mind so you don't blow out annual subscriptions
+* impliment lock/arm and unlock/disarm commands
+* maybe turn into a platform and auto-discover all devices
+
 ## Credits
 This plugin was forked from and inspired by homebridge-delay-switch, homebridge-simple-switch-example and the alexa-smartstart and smartstart npm by @dale3h.  Without these last two modules, this homebridge module wouldn't exist.
