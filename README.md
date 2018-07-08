@@ -12,6 +12,12 @@
             "username": "[username]",
             "password": "[password]",
             "delay": 900000
+        },
+        {
+            "accessory": "SmartStartLock",
+            "name": "Civic",
+            "username": "[username]",
+            "password": "[password]",
         }
     ]
 
@@ -29,12 +35,26 @@
             "delay": 900000
         },
         {
+            "accessory": "SmartStartLock",
+            "name": "Odyssey",
+            "username": "[username]",
+            "password": "[password]",
+            "deviceIndex": 0,
+        },
+        {
             "accessory": "SmartStart",
             "name": "Ridgeline",
             "username": "[username]",
             "password": "[password]",
             "deviceIndex": 1,
             "delay": 900000
+        },
+        {
+            "accessory": "SmartStartLock",
+            "name": "Ridgeline",
+            "username": "[username]",
+            "password": "[password]",
+            "deviceIndex": 1,
         }
     ]
 
@@ -44,8 +64,9 @@
 
 ## What does this do?
 
-This plugin enables your SmartStart vehicle to be controlled by HomeKit (and Siri) via homebridge.  Install using the standard homebridge instructions, and add this plugin.
+This plugin enables your SmartStart remote starter to remote start, stop, lock/arm and unlock/disarm your vehicle to be controlled by HomeKit (and Siri) via homebridge.  Install using the standard homebridge instructions, and add this plugin.
 
+* accessory - Use SmartStart for remote smart support and/or use SmartStartLock for remote lock/arm and unlock/disarm
 * name - give your vehicle a name.  Can be anything you like
 * username - your username you use to login to the app on your phone to control your vehicle
 * password - the password to the same account
@@ -63,11 +84,10 @@ Locking/unlocking is also not implemented.
  ```sudo npm install -g homebridge-smartstart```
 
 ## Pro-tip
-If you have multiple vehicles, and once they are all working and tested via HomeKit, create a room called Vehicles.  (or cars, or whatever you'd like to call the group)  You can then tell Siri "start vehicles" and it will kick a smartstart action to all of them at the same time.  If you have HomeKit sharing setup, your other family members will be able to also see if the vehicles have been started.
+If you have multiple vehicles, and once they are all working and tested via HomeKit, create a room called Vehicles.  (or cars, or whatever you'd like to call the group)  You can then tell Siri "start vehicles" or "unlock vehicles" and it will kick a smartstart action to all of them at the same time.  If you have HomeKit sharing setup, your other family members will be able to also see if the vehicles have been started.
  
 ## Todo
-* implement status syncing with cloud.  Should be done in a way that keeps the 5000 actions/year in mind so you don't blow out annual subscriptions
-* implement lock/arm and unlock/disarm commands
+* implement status syncing with cloud.  Should be done in a way that keeps the 5000 actions/year in mind so you don't blow out annual subscriptions.  Note that remote control and local unlock/lock actions won't be reflicted in homekit.
 * maybe turn into a platform and auto-discover all devices
 
 ## Credits

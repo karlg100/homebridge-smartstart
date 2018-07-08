@@ -5,10 +5,10 @@ var SmartStartLib = require('smartstart');
 
 
 module.exports = (homebridge) => {
-  /* this is the starting point for the plugin where we register the accessory */
   Service = homebridge.hap.Service
   Characteristic = homebridge.hap.Characteristic
   homebridge.registerAccessory('homebridge-smartstart', 'SmartStart', SmartStart)
+  homebridge.registerAccessory('homebridge-smartstart', 'SmartStartLock', SmartStartLock)
 }
 
 class SmartStart {
@@ -16,9 +16,10 @@ class SmartStart {
     // get config values
     this.log = log;
     this.name = config['name'];
-    this.service = new Service.Switch(this.name);
-    this.delay = config['delay'];
-    this.timer;
+    this.startService = new Service.Switch(this.name);
+    this.startDelay = config['delay'];
+    this.deviceIndex = config['deviceIndex'];
+    this.startTimer;
 
     // define SmartStart vehicle
     this.vehicle = new SmartStartLib({
@@ -27,34 +28,26 @@ class SmartStart {
       deviceIndex: config['deviceIndex']
     });
 
-    this.log(config['username']);
-
-    this.service = new Service.Switch(this.name);
+    this.vehicle.getDeviceId(this.deviceIndex, this.infoCallback.bind(this));
   }
 
   getServices () {
-    /*
-     * The getServices function is called by Homebridge and should return an array of Services this accessory is exposing.
-     * It is also where we bootstrap the plugin to tell Homebridge which function to use for which action.
-     */
 
-     /* Create a new information service. This just tells HomeKit about our accessory. */
-    const informationService = new Service.AccessoryInformation()
-        .setCharacteristic(Characteristic.Manufacturer, 'oznu')
-        .setCharacteristic(Characteristic.Model, 'SwitchExample')
-        .setCharacteristic(Characteristic.SerialNumber, 'oznu-switch-example')
+    var informationService = new Service.AccessoryInformation()
+        .setCharacteristic(Characteristic.Manufacturer, 'SmartStart')
+        .setCharacteristic(Characteristic.Model, 'SmartStart')
+        .setCharacteristic(Characteristic.SerialNumber, '')
 
-    /*
-     * For each of the service characteristics we need to register setters and getter functions
-     * 'get' is called when HomeKit wants to retrieve the current state of the characteristic
-     * 'set' is called when HomeKit wants to update the value of the characteristic
-     */
-    this.service.getCharacteristic(Characteristic.On)
+
+    this.startService.getCharacteristic(Characteristic.On)
       .on('get', this.getOnCharacteristicHandler.bind(this))
       .on('set', this.setOnCharacteristicHandler.bind(this))
 
-    /* Return both the main service (this.service) and the informationService */
-    return [informationService, this.service]
+    return [informationService, this.startService]
+  }
+
+  infoCallback(err, result) {
+    //this.log(this.vehicle);
   }
 
   actionCallback(err, result) {
@@ -72,30 +65,98 @@ class SmartStart {
       this.isOn = value
     }
 
-
     if (!value) {
-      clearTimeout(this.timer);
+      clearTimeout(this.smartTimer);
     } else {
-      this.timer = setTimeout(function() {
+      this.smartTimer = setTimeout(function() {
         this.log('Time is Up!');
-        this.service.getCharacteristic(Characteristic.On).updateValue(false);
+        this.startService.getCharacteristic(Characteristic.On).updateValue(false);
         this.isOn = false;
-      }.bind(this), this.delay);
-
+      }.bind(this), this.startDelay);
     }
-
     callback(null)
   }
 
   getOnCharacteristicHandler (callback) {
 
     this.log(`updating vehcile status`, this.isOn)
-
     /*
 	if the SmartStart API can be figured out, add timer based updates to poll the vehicles, then return those cached values here
      */
-
     callback(null, this.isOn)
+  }
+}
+
+class SmartStartLock {
+  constructor (log, config) {
+    // get config values
+    this.log = log;
+    this.name = config['name'];
+    this.lockService = new Service.LockMechanism(this.name);
+    this.lockState = Characteristic.LockCurrentState.SECURED;
+
+    // define SmartStart vehicle
+    this.vehicle = new SmartStartLib({
+      username: config['username'],
+      password: config['password'],
+      deviceIndex: config['deviceIndex']
+    });
+  }
+
+  getServices () {
+    const informationService = new Service.AccessoryInformation()
+        .setCharacteristic(Characteristic.Manufacturer, 'SmartStart')
+        .setCharacteristic(Characteristic.Model, 'SmartStart')
+        .setCharacteristic(Characteristic.SerialNumber, '');
+
+    this.lockService.getCharacteristic(Characteristic.LockCurrentState)
+      .on('get', this.getLockCharacteristicHandler.bind(this));
+
+    this.lockService.getCharacteristic(Characteristic.LockTargetState)
+      .on('get', this.getLockCharacteristicHandler.bind(this))
+      .on('set', this.setLockCharacteristicHandler.bind(this));
+
+    return [informationService, this.lockService]
+  }
+
+  actionCallback(err, result) {
+    if(err) {
+      this.updateCurrentState(Characteristic.LockCurrentState.JAMMED);
+      return console.error(err);
+    }
+    this.updateCurrentState(this.lockState);
+    //this.log(this);
+    this.log(this.lockState+" "+this.name);
+    //this.log(result);
+  }
+
+  // Lock Handler
+  setLockCharacteristicHandler (targetState, callback) {
+    var lockh = this;
+
+    if (targetState == Characteristic.LockCurrentState.SECURED) {
+      this.log(`locking/arming `+this.name, targetState)
+      this.lockState = targetState
+      this.vehicle.arm(this.actionCallback.bind(this));
+    } else {
+      this.log(`unlocking/disarming `+this.name, targetState)
+      this.lockState = targetState
+      this.vehicle.disarm(this.actionCallback.bind(this));
+    }
+    callback();
+  }
+
+  updateCurrentState(toState) {
+    this.lockService
+      .getCharacteristic(Characteristic.LockCurrentState)
+      .updateValue(toState);
+  }
+
+  getLockCharacteristicHandler (callback) {
+    /*
+	if the SmartStart API can be figured out, add timer based updates to poll the vehicles, then return those cached values here
+     */
+    callback(null, this.lockState)
   }
 
 }
